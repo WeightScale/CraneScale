@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="wrap_content" android:gravity="left|center"
+              android:paddingBottom="1dp"
+              android:paddingTop="1dp" android:paddingLeft="5dp" android:orientation="vertical" android:layout_width="match_parent" android:scrollbarAlwaysDrawVerticalTrack="true"
+        >
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="39dp" android:layout_marginLeft="0dp" android:background="@drawable/list_weight_rectangle">
+        <TextView
+                android:layout_width="207dp"
+                android:layout_height="wrap_content"
+                android:text="Data Time"
+                android:id="@+id/list_weight_time"
+                android:layout_alignParentLeft="true" android:textColor="@color/text"
+                android:focusable="false" android:layout_alignParentBottom="true" android:layout_alignParentTop="true"
+                android:textSize="15dp" android:gravity="center_vertical"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton"
+                android:focusable="false"
+                android:layout_gravity="right"
+                android:src="@android:drawable/ic_menu_delete"
+                android:layout_alignParentRight="true" android:layout_alignTop="@+id/list_weight_time"
+                android:onClick="removeWeightDescriptorOnClickHandler"/>
+        <TextView
+                android:layout_height="25dp"
+                android:text="Weight"
+                android:id="@+id/list_weight_weight"
+                android:layout_width="72dp"
+                android:gravity="center_vertical|right"
+                android:textSize="20dip"
+                android:scrollbarAlwaysDrawVerticalTrack="false"
+                android:textColor="@color/text"
+                android:layout_below="@+id/list_weight_time"
+                android:layout_alignTop="@+id/list_weight_time"
+                android:layout_alignBottom="@+id/list_weight_time"
+                android:layout_toLeftOf="@+id/imageButton"
+                android:layout_toRightOf="@+id/list_weight_time"></TextView>
+    </RelativeLayout>
+</LinearLayout>

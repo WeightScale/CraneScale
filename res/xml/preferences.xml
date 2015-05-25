@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Информация">
+        <EditTextPreference android:title="Имя весов" android:key="name"/>
+        <Preference android:title="Адрес весов" android:key="address" android:enabled="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Настройка">
+        <EditTextPreference android:title="Таймер выключения" android:key="timer" android:inputType="number"/>
+        <EditTextPreference android:title="Шаг измерения" android:key="step" android:inputType="number"/>
+        <Preference android:title="Обнуление" android:key="nullw" android:inputType="number"/>
+        <EditTextPreference android:title="Фильтр АЦП (0-15)" android:summary="Точность измерения чем точнее тем медленее" android:key="filter" android:inputType="number"/>
+        <Preference android:title="О программе" android:key="about"/>
+    </PreferenceCategory>
+</PreferenceScreen>

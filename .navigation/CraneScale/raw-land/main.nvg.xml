@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_scales"/>
+      <point      
+        x = "1800"      
+        y = "100"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.kostya.cranescale.ActivityScales"/>
+      <point      
+        x = "500"      
+        y = "100"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.kostya.cranescale.ActivityPreferences"/>
+      <point      
+        x = "2240"      
+        y = "1440"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.kostya.cranescale.ActivityAbout"/>
+      <point      
+        x = "550"      
+        y = "1310"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_search"/>
+      <point      
+        x = "1800"      
+        y = "680"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.kostya.cranescale.ActivitySearch"/>
+      <point      
+        x = "500"      
+        y = "680"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

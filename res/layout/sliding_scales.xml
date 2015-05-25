@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:gravity="right" android:background="@color/background2">
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_marginLeft="@dimen/corners" android:gravity="right">
+
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="@dimen/corners3"
+                      android:background="@color/background1">
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent"
+                        android:layout_height="@dimen/text_large_xx"
+                        android:padding="@dimen/padding"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:layout_margin="@dimen/padding">
+
+            <ImageView android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/ic_action_zero"
+                       style="@style/CustomButtonImage"
+                       android:id="@+id/buttonZero"
+                       android:layout_weight="1"/>
+
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="wrap_content"
+                          android:layout_height="fill_parent"
+                          android:id="@+id/linearSectionScale"
+                          android:weightSum="1" android:gravity="bottom"
+                    >
+
+                <com.kostya.cranescale.BatteryProgressBar
+                        style="@style/CustomBatteryProgressBar"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/progressBarBattery"
+                        android:visibility="visible"
+                        android:layout_width="@dimen/text_large_xx" android:progress="100"/>
+                <com.kostya.cranescale.TemperatureProgressBar
+                        style="@style/CustomTemperatureProgressBar"
+                        android:layout_width="@dimen/text_large_xx"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/progressBarTemperature"
+                        android:visibility="visible"
+                        android:indeterminate="false"
+                        android:clickable="false"
+                        android:progress="22"
+                        />
+            </LinearLayout>
+
+            <ImageView android:layout_width="@dimen/text_large_xx"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/imageViewRemote"
+                       android:layout_gravity="bottom|center_horizontal"
+                       android:adjustViewBounds="false" android:src="@drawable/rss_off"
+                       android:baselineAlignBottom="false"
+                    />
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="НОВЫЙ ДОКУМЕНТ"
+            android:drawableRight="@drawable/ic_launcher_add_doc"
+            android:clickable="true"
+            android:id="@+id/textNewDocument"
+            android:gravity="left|center"/>
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="ВЕСОВЫЕ ДОКУМЕНТЫ"
+                android:drawableRight="@drawable/ic_launcher_add_doc"
+                android:clickable="true"
+                android:id="@+id/textWeightDocument"
+                android:gravity="left|center"/>
+
+    </LinearLayout>
+</LinearLayout>
