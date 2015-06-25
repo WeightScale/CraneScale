@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -21,7 +22,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.*;
 import android.widget.*;
-import com.konst.module.*;
+import com.konst.module.Module;
+import com.konst.module.ScaleModule;
+import com.konst.module.ScaleModule.HandlerBatteryTemperature;
 import com.kostya.cranescale.provider.WeightDocDbAdapter;
 
 import java.io.IOException;
@@ -30,7 +33,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class ActivityScales extends FragmentActivity implements View.OnClickListener, View.OnLongClickListener, InterfaceScaleModule {
+public class ActivityScales extends FragmentActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private class ZeroThread extends Thread {
         private final ProgressDialog dialog;
@@ -187,7 +190,7 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
 
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 		//TODO лог всех событий внизу экрана
 		super.onCreate(savedInstanceState);
 
@@ -315,10 +318,10 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
         AlertDialog.Builder dialog;
         switch (resultCode) {
             case RESULT_OK:
-                scaleModule.handleModuleConnect(HandlerScaleConnect.Result.STATUS_LOAD_OK);
+                scaleModule.handleResultConnect(Module.ResultConnect.STATUS_LOAD_OK);
                 break;
             case RESULT_CANCELED:
-                scaleModule.handleModuleConnectError(HandlerScaleConnect.Result.STATUS_CONNECT_ERROR, "Connect error");
+                scaleModule.handleConnectError(Module.ResultError.CONNECT_ERROR, "Connect error");
                 break;
             default:
         }
@@ -326,7 +329,7 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
 
     final HandlerBatteryTemperature handlerBatteryTemperature = new HandlerBatteryTemperature() {
         @Override
-        public int handlerBatteryTemperature(final int battery, final int temperature) {
+        public int onEvent(final int battery, final int temperature) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -338,15 +341,15 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
         }
     };
 
-    final HandlerWeightUpdate handlerWeight = new HandlerWeightUpdate(){
+    final ScaleModule.HandlerWeight handlerWeight = new ScaleModule.HandlerWeight(){
 
         @Override
-        public int handlerWeight(final Result what, final int weight, final int sensor) {
+        public int onEvent(final ScaleModule.ResultWeight resultWeight, final int weight, final int sensor) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    switch (what){
-                        case RESULT_WEIGHT_NORMAL:
+                    switch (resultWeight){
+                        case WEIGHT_NORMAL:
                             moduleWeight = weight;
                             moduleSensorValue = sensor;
                             progressBarWeight.setProgress(sensor);
@@ -355,7 +358,7 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
                             progressBarWeight.setProgressDrawable(getResources().getDrawable(R.drawable.progress_weight));
                             progressBarWeight.getProgressDrawable().setBounds(bounds);
                             break;
-                        case RESULT_WEIGHT_LIMIT:
+                        case WEIGHT_LIMIT:
                             moduleWeight = weight;
                             moduleSensorValue = sensor;
                             progressBarWeight.setProgress(sensor);
@@ -364,14 +367,14 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
                             progressBarWeight.setProgressDrawable(getResources().getDrawable(R.drawable.progress_weight_danger));
                             progressBarWeight.getProgressDrawable().setBounds(bounds);
                             break;
-                        case RESULT_WEIGHT_MARGIN:
+                        case WEIGHT_MARGIN:
                             moduleWeight = weight;
                             moduleSensorValue = sensor;
                             progressBarWeight.setProgress(sensor);
                             weightTextView.updateProgress(getString(R.string.OVER_LOAD), Color.RED, getResources().getDimension(R.dimen.text_large_xx));
                             vibrator.vibrate(100);
                             break;
-                        case RESULT_WEIGHT_ERROR:
+                        case WEIGHT_ERROR:
                             weightTextView.updateProgress(getString(R.string.NO_CONNECT), Color.BLACK, getResources().getDimension(R.dimen.text_large_x));
                             progressBarWeight.setProgress(0);
                             break;
@@ -383,62 +386,26 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
             return 1; // Обновляем через милисикунды
         }
 
-        /*@Override
-        public void handleMessage(Message msg) {
-            switch (InterfaceScaleModule.MODULE_RESULT.values()[msg.what]){
-                case RESULT_WEIGHT_NORMAL:
-                    moduleWeight = msg.arg1;
-                    moduleSensorValue = msg.arg2;
-                    progressBarWeight.setProgress(msg.arg2);
-                    Rect bounds = progressBarWeight.getProgressDrawable().getBounds();
-                    weightTextView.updateProgress(getWeightToStepMeasuring(msg.arg1), Color.BLACK, getResources().getDimension(R.dimen.text_big));
-                    progressBarWeight.setProgressDrawable(getResources().getDrawable(R.drawable.progress_weight));
-                    progressBarWeight.getProgressDrawable().setBounds(bounds);
-                break;
-                case RESULT_WEIGHT_LIMIT:
-                    moduleWeight = msg.arg1;
-                    moduleSensorValue = msg.arg2;
-                    progressBarWeight.setProgress(msg.arg2);
-                    bounds = progressBarWeight.getProgressDrawable().getBounds();
-                    weightTextView.updateProgress(getWeightToStepMeasuring(msg.arg1), Color.RED, getResources().getDimension(R.dimen.text_big));
-                    progressBarWeight.setProgressDrawable(getResources().getDrawable(R.drawable.progress_weight_danger));
-                    progressBarWeight.getProgressDrawable().setBounds(bounds);
-                break;
-                case RESULT_WEIGHT_MARGIN:
-                    moduleWeight = msg.arg1;
-                    moduleSensorValue = msg.arg2;
-                    progressBarWeight.setProgress(msg.arg2);
-                    weightTextView.updateProgress(getString(R.string.OVER_LOAD), Color.RED, getResources().getDimension(R.dimen.text_large_xx));
-                    vibrator.vibrate(100);
-                break;
-                case RESULT_WEIGHT_ERROR:
-                    weightTextView.updateProgress(getString(R.string.NO_CONNECT), Color.BLACK, getResources().getDimension(R.dimen.text_large_xx));
-                    progressBarWeight.setProgress(0);
-                break;
-            }
-        }*/
     };
 
     public final ScaleModule scaleModule = new ScaleModule() {
 
         @Override
-        public void handleModuleConnect(Result module_result) {
-            switch (module_result){
+        public void handleResultConnect(ResultConnect resultConnect) {
+            switch (resultConnect){
                 case STATUS_LOAD_OK:
                     try {
-                        setTitle(getString(R.string.app_name) + " \"" + ScaleModule.getName() + "\", v." + ScaleModule.getNumVersion()); //установить заголовок
+                        setTitle(getString(R.string.app_name) + " \"" + ScaleModule.getNameBluetoothDevice() + "\", v." + ScaleModule.getNumVersion()); //установить заголовок
                     } catch (Exception e) {
                         setTitle(getString(R.string.app_name) + " , v." + ScaleModule.getNumVersion()); //установить заголовок
                     }
-                    Main.preferencesScale.write(ActivityPreferences.KEY_LAST, ScaleModule.getAddress());
+                    Main.preferencesScale.write(ActivityPreferences.KEY_LAST, ScaleModule.getAddressBluetoothDevice());
                     progressBarWeight.setMax(ScaleModule.getMarginTenzo());
                     progressBarWeight.setSecondaryProgress(ScaleModule.getLimitTenzo());
-                    ScaleModule.processBattery(true, handlerBatteryTemperature);
-                    //autoWeightThread = new AutoWeightThread();
-                    //autoWeightThread.start();
-                    ScaleModule.processUpdate(true, handlerWeight);
-                break;
-                case STATUS_SETTINGS_UNCORRECTED:
+                    handlerBatteryTemperature.process(true);
+                    handlerWeight.process(true);
+                    break;
+                case STATUS_SCALE_UNKNOWN:
                     dialog = new AlertDialog.Builder(ActivityScales.this);
                     dialog.setTitle("Ошибка в настройках");
                     dialog.setCancelable(false);
@@ -460,15 +427,15 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
                         }
                     });
                     dialog.show();
-                break;
+                    break;
                 default:
             }
         }
 
         @Override
-        public void handleModuleConnectError(Result what, String error) {
-            switch (what){
-                case STATUS_TERMINAL_ERROR:
+        public void handleConnectError(ResultError resultError, String error) {
+            switch (resultError){
+                case TERMINAL_ERROR:
                     dialog = new AlertDialog.Builder(ActivityScales.this);
                     dialog.setTitle(getString(R.string.preferences_error));
                     dialog.setCancelable(false);
@@ -493,15 +460,13 @@ public class ActivityScales extends FragmentActivity implements View.OnClickList
                         }
                     });
                     dialog.show();
-                case STATUS_CONNECT_ERROR:
+                case CONNECT_ERROR:
                     setTitle(getString(R.string.app_name) + getString(R.string.NO_CONNECT)); //установить заголовок
                     imageViewRemote.setImageDrawable(getResources().getDrawable(R.drawable.rss_off));
                     break;
                 default:
             }
         }
-
-
     };
 
     private static View createTabView(final Context context, final CharSequence text) {

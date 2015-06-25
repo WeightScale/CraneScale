@@ -2,6 +2,7 @@
   <library name="ScaleModule">
     <CLASSES>
       <root url="jar://D:/MY/Proect/IdeaProjects/ScaleModule/out/artifacts/ScaleModule_jar/ScaleModule.jar!/" />
+      <root url="jar://C:/android/sdk/extras/android/support/v4/android-support-v4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
